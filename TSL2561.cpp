@@ -36,6 +36,7 @@
 
 #if defined ( ESP8266 )
   #include <pgmspace.h>
+  #include <pins_arduino.h>
 #else
   #include <avr/pgmspace.h>
   #include <util/delay.h>
@@ -49,12 +50,23 @@ TSL2561::TSL2561(uint8_t addr) {
   _initialized = false;
   _integration = TSL2561_INTEGRATIONTIME_13MS;
   _gain = TSL2561_GAIN_16X;
-
+  _sda = SDA;
+  _scl = SCL;
   // we cant do wire initialization till later, because we havent loaded Wire yet
 }
-
+#ifdef ESP8266
+TSL2561::TSL2561(uint8_t addr, uint8_t sda, uint8_t scl) {
+  _sda = sda;
+  _scl = scl;
+  _addr = addr;
+  _initialized = false;
+  _integration = TSL2561_INTEGRATIONTIME_13MS;
+  _gain = TSL2561_GAIN_16X;
+  // we cant do wire initialization till later, because we havent loaded Wire yet
+}
+#endif
 boolean TSL2561::begin(void) {
-  Wire.begin();
+  Wire.begin(_sda, _scl);
 
  // Initialise I2C
   Wire.beginTransmission(_addr);

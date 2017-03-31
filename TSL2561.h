@@ -162,6 +162,9 @@ tsl2561Gain_t;
 class TSL2561 {
  public:
   TSL2561(uint8_t addr);
+  #ifdef ESP8266
+  TSL2561(uint8_t addr, uint8_t sda, uint8_t scl);
+  #endif
   boolean begin(void);
   void enable(void);
   void disable(void);
@@ -178,6 +181,8 @@ class TSL2561 {
   int8_t _addr;
   tsl2561IntegrationTime_t _integration;
   tsl2561Gain_t _gain;
+  uint8_t _sda;
+  uint8_t _scl;
 
   boolean _initialized;
 };
